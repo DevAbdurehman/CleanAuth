@@ -1,4 +1,5 @@
-﻿using CleanAuth.Application.DTOs.Auth;
+﻿using CleanAuth.Application.DTOs;
+using CleanAuth.Application.DTOs.Auth;
 using CleanAuth.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,20 @@ public class AuthController : ControllerBase
         if (!result.IsSuccess)
         {
             return BadRequest(result.Message);
+        }
+
+        return Ok(result.Message);
+
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto request)
+    {
+        var result = await _authService.LoginAsync(request);
+
+        if (!result.IsSuccess)
+        {
+            return Unauthorized(result.Message);
         }
 
         return Ok(result.Message);

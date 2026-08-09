@@ -1,5 +1,6 @@
 ﻿
 using CleanAuth.Application.Common;
+using CleanAuth.Application.DTOs;
 using CleanAuth.Application.DTOs.Auth;
 using CleanAuth.Application.Interfaces.Repositories;
 using CleanAuth.Application.Services.Interfaces;
@@ -49,5 +50,26 @@ public class AuthService : IAuthService
         await _userRepository.SaveChangesAsync();
 
         return Result.Success("User registered successfully.");
+    }
+    public async Task<Result> LoginAsync(LoginDto request)
+    {
+        var user = await _userRepository.GetEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            return Result.Failure("Invalid email or password.");
+        }
+
+        var passwordResult = _passwordHasher.VerifyHashedPassword(
+            user,
+            user.PasswordHash,
+            request.Password);
+
+        if (passwordResult == PasswordVerificationResult.Failed)
+        {
+            return Result.Failure("Invalid email or password.");
+        }
+
+        return Result.Success("Login successful.");
     }
 }
