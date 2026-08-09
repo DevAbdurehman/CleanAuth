@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CleanAuth.Application\CleanAuth.Application.csproj" />
     <ProjectReference Include="..\CleanAuth.Infrastructure\CleanAuth.Infrastructure.csproj" />
   </ItemGroup>

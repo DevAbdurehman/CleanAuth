@@ -1,4 +1,10 @@
-﻿using CleanAuth.Infrastructure.Data;
+﻿using CleanAuth.Application.Interfaces.Repositories;
+using CleanAuth.Application.Services.Implementations;
+using CleanAuth.Application.Services.Interfaces;
+using CleanAuth.Domain.Entities;
+using CleanAuth.Infrastructure.Data;
+using CleanAuth.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +19,12 @@ namespace CleanAuth.Infrastructure
             services.AddDbContext<ApplicationDBContext>
                 (options => options.UseSqlServer
                 (configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUserRepository, UserRepositories>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             return services;
+
         }
     }
 }
