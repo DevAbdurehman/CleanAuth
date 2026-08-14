@@ -14,14 +14,21 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
 
     private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IJwtService _jwtService;
+
+
 
     public AuthService(
-      IUserRepository userRepository,
-      IPasswordHasher<User> passwordHasher)
+    IUserRepository userRepository,
+    IPasswordHasher<User> passwordHasher,
+    IJwtService jwtService)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
+        _jwtService = jwtService;
     }
+
+
 
     public async Task<Result> RegisterAsync(RegisterRequestDto request)
     {
@@ -70,6 +77,10 @@ public class AuthService : IAuthService
             return Result.Failure("Invalid email or password.");
         }
 
-        return Result.Success("Login successful.");
+        var token = _jwtService.GenerateToken(
+     user.Id,
+     user.Email);
+
+        return Result.Success(token);
     }
 }

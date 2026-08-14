@@ -1,6 +1,7 @@
 ﻿using CleanAuth.Application.DTOs;
 using CleanAuth.Application.DTOs.Auth;
 using CleanAuth.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanAuth.API.Controllers;
@@ -41,5 +42,11 @@ public class AuthController : ControllerBase
         }
 
         return Ok(result.Message);
+    }
+    [Authorize]
+    [HttpGet("profile")]
+    public IActionResult Profile()
+    {
+        return Ok("You are authenticated!");
     }
 }

@@ -5,6 +5,7 @@ using CleanAuth.Domain.Entities;
 using CleanAuth.Infrastructure.Configuration;
 using CleanAuth.Infrastructure.Data;
 using CleanAuth.Infrastructure.Repositories;
+using CleanAuth.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,9 @@ namespace CleanAuth.Infrastructure
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.AddScoped<IJwtService, JwtService>();
+
+
             return services;
 
         }
