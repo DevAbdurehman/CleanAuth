@@ -20,5 +20,8 @@ namespace CleanAuth.Domain.Entities
         public string PasswordHash { get; set; }= string.Empty;
         public bool IsEmailVerified { get; set; } = false;
         public bool  IsActive { get; set; }
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
+    = new List<RefreshToken>();
     }
 }

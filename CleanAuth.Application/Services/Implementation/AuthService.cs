@@ -15,17 +15,19 @@ public class AuthService : IAuthService
 
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IJwtService _jwtService;
-
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
 
     public AuthService(
     IUserRepository userRepository,
     IPasswordHasher<User> passwordHasher,
-    IJwtService jwtService)
+    IJwtService jwtService,
+    IRefreshTokenRepository refreshTokenRepository)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _jwtService = jwtService;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
 
@@ -80,6 +82,17 @@ public class AuthService : IAuthService
         var token = _jwtService.GenerateToken(
      user.Id,
      user.Email);
+
+        var refreshToken = _jwtService.GenerateRefreshToken();
+
+        var refreshTokenEntity = new RefreshToken
+        {
+            Token = refreshToken,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            UserId = user.Id
+        };
+
+        await _refreshTokenRepository.AddAsync(refreshTokenEntity);
 
         return Result.Success(token);
     }

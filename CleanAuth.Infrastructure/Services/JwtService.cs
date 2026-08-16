@@ -1,10 +1,11 @@
 ﻿using CleanAuth.Application.Services.Interfaces;
 using CleanAuth.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CleanAuth.Infrastructure.Services;
 
@@ -41,5 +42,10 @@ public class JwtService : IJwtService
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(
+            RandomNumberGenerator.GetBytes(64));
     }
 }

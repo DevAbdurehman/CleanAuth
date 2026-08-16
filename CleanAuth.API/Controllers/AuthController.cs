@@ -3,6 +3,7 @@ using CleanAuth.Application.DTOs.Auth;
 using CleanAuth.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CleanAuth.API.Controllers;
 
@@ -47,6 +48,13 @@ public class AuthController : ControllerBase
     [HttpGet("profile")]
     public IActionResult Profile()
     {
-        return Ok("You are authenticated!");
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+        return Ok(new
+        {
+            UserId = userId,
+            Email = email
+        });
     }
 }

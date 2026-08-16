@@ -28,6 +28,8 @@ namespace CleanAuth.Infrastructure
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             services.AddScoped<IJwtService, JwtService>();
 
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
 
             return services;
 
