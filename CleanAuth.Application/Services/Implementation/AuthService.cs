@@ -94,6 +94,36 @@ public class AuthService : IAuthService
 
         await _refreshTokenRepository.AddAsync(refreshTokenEntity);
 
-        return Result.Success(token);
+        return Result.Success((object)new LoginResponseDto
+        {
+            AccessToken = token,
+            RefreshToken = refreshToken
+        });
+    }
+    public async Task<Result> RefreshTokenAsync(
+    RefreshTokenRequestDto request)
+    {
+        var refreshToken = await _refreshTokenRepository
+            .GetByTokenAsync(request.RefreshToken);
+
+        if (refreshToken == null)
+        {
+            return Result.Failure("Invalid refresh token.");
+        }
+
+        if (refreshToken.ExpiresAt < DateTime.UtcNow)
+        {
+            return Result.Failure("Refresh token has expired.");
+        }
+
+        if (refreshToken.IsRevoked)
+        {
+            return Result.Failure("Refresh token has been revoked.");
+        }
+
+        var newAccessToken = _jwtService.GenerateToken(
+            refreshToken.UserId,
+            refreshToken.User.Email);
+        return Result.Success((object)newAccessToken);
     }
 }

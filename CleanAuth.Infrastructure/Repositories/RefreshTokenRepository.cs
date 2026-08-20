@@ -1,6 +1,7 @@
 ﻿using CleanAuth.Application.Interfaces.Repositories;
 using CleanAuth.Domain.Entities;
 using CleanAuth.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanAuth.Infrastructure.Repositories;
 
@@ -17,5 +18,11 @@ public class RefreshTokenRepository : IRefreshTokenRepository
     {
         await _context.RefreshTokens.AddAsync(refreshToken);
         await _context.SaveChangesAsync();
+    }
+    public async Task<RefreshToken?> GetByTokenAsync(string token)
+    {
+        return await _context.RefreshTokens
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.Token == token);
     }
 }

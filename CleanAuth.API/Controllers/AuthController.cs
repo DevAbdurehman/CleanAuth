@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
             return Unauthorized(result.Message);
         }
 
-        return Ok(result.Message);
+        return Ok(result.Data);
     }
     [Authorize]
     [HttpGet("profile")]
@@ -56,5 +56,18 @@ public class AuthController : ControllerBase
             UserId = userId,
             Email = email
         });
+    }
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken(
+    RefreshTokenRequestDto request)
+    {
+        var result = await _authService.RefreshTokenAsync(request);
+
+        if (!result.IsSuccess)
+        {
+            return Unauthorized(result.Message);
+        }
+
+        return Ok(result.Data);
     }
 }
